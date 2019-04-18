@@ -17,7 +17,7 @@ I'm a big fan of living documentation and design systems. When building design s
 
 Write your CSS files, add some comments with a tiny specific syntax and provide some templates to generate the final documentation. Edit your styles and regenerate, your documentation will always be in sync with your actual code. Check the `example/` folder to get a grasp on how it works.
 
-To keep things simple, I've ditched the HTML in favor of a more compact syntax [inspired by pugjs](https://github.com/ducent/spenx). So you'll have to use it in your templates, but I promise it won't hurt you.
+To keep things simple, I've ditched the HTML in favor of a more compact syntax `inspired by pugjs <https://github.com/ducent/spenx>`_. So you'll have to use it in your templates, but I promise it won't hurt you.
 
 Installation
 ------------
