@@ -1,0 +1,44 @@
+from eugen.parser import Parser
+from eugen.utils import copy
+from eugen.site import Site
+from eugen.version import __version__
+from eugen.engine import Engine
+from os import path
+import logging
+
+DEFAULT_TEMPLATES_DIRECTORY = 'templates'
+DEFAULT_BUILD_DIRECTORY = '_build'
+
+class Processor:
+  """Main class which will orchestrate the site generation process
+  """
+
+  def __init__(self, templates_directory=DEFAULT_TEMPLATES_DIRECTORY, build_directory=DEFAULT_BUILD_DIRECTORY):
+    self._logger = logging.getLogger(self.__class__.__name__)
+    self._parser = Parser()
+    self._build_directory = path.abspath(build_directory)
+    self._templates_directory = path.abspath(templates_directory)
+    self._engine = Engine(self._build_directory, self._templates_directory)
+
+  def process(self, *css_files):
+    self._logger.info("""
+-------------------------------
+  Eugen version: {version}
+
+  Processing files: {files}
+  Using templates from: {templates}
+  And build directory: {build}
+-------------------------------""".format(
+                                  version=__version__,
+                                  files=', '.join(css_files), 
+                                  templates=self._templates_directory, 
+                                  build=self._build_directory))
+    
+    site = Site()
+
+    for css_file in css_files:
+      site.add_result(css_file, self._parser.parse_file(css_file))
+
+    site.compile()
+
+    self._engine.render(site)

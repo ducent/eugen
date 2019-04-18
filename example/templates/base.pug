@@ -1,0 +1,23 @@
+| <!DOCTYPE html>
+html
+  head
+    title eugen
+    meta(charset='utf-8')
+    link(rel='stylesheet', type='text/css', href='{{ "./static/template.css" | asset }}') 
+    {% for css in source_css %}
+    link(rel='stylesheet', type='text/css', href='{{ css | url }}') 
+    {% endfor %}
+  body
+    ul.sidebar
+      a(href=`{{ 'index.html' | url }}`) Home
+      {% for block in site.groups.block %}
+      li
+        {% if current_url == block.url %}
+        a.active(href='{{ block.url | url }}') {{ block.declarations[0] }}
+        {% else %}
+        a(href='{{ block.url | url }}') {{ block.declarations[0] }}
+        {% endif %}
+      {% endfor %}
+    .content
+      {% block content %}
+      {% endblock %}

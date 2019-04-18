@@ -1,0 +1,19 @@
+{% extends "base.pug" %}
+{% block content %}
+h1 {{ page.declarations | join(', ') }}
+h2 Description
+{{ page.block | markdown }}
+
+{% if page.preview %}
+pre
+  {{ page.preview | html | e }}
+{% endif %}
+
+h2 Elements
+{% for ele in site.declaration_startswith(page.declarations[0], site.groups.element) %}
+h3 {{ ele.declarations[0] }}
+
+{{ ele.element | markdown }}
+
+{% endfor %}
+{% endblock %}
