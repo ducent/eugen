@@ -17,7 +17,7 @@ I'm a big fan of living documentation and design systems. When building design s
 
 Write your CSS files, add some comments with a tiny specific syntax and provide some templates to generate the final documentation. Edit your styles and regenerate, your documentation will always be in sync with your actual code. Check the `example/` folder to get a grasp on how it works.
 
-To keep things simple, I've ditched the HTML in favor of a more compact syntax `inspired by pugjs <https://github.com/ducent/spenx>`_. So you'll have to use it in your templates, but I promise it won't hurt you.
+To keep things simple, you can use template written with a more compact syntax than HTML `inspired by pugjs <https://github.com/ducent/spenx>`_.
 
 Installation
 ------------
@@ -35,3 +35,59 @@ Usage
 
 Syntax
 ------
+
+The syntax is really simple:
+
+.. code-block:: css
+
+  /**
+   * This is your root element, which will be rendered by the index template, it
+   * represents your home.
+   *
+   * Here this is a simple comment not tied to a `tag`. Let's add some eugen specific
+   * comments with the `@` prefix.
+   *
+   * @version: 1.0.0
+   */
+  :root {
+    /**
+     * Now the :root declaration has properties too which follow the same comment
+     * syntax.
+     *
+     * @category: Colors
+     *
+    --brand-color: blue;
+  }
+
+  /**
+   * @block
+   * You can also omit the `:` and directly add the description, here, this declaration
+   * is the sidebar block.
+   *
+   * During the rendering, each element will be grouped by every `tag` (the `@` prefix) keys
+   * and a template matching that tag will be rendered for this element.
+   *
+   * For example, with this declaration, it will try to find a template matching the
+   * `block` name, and render it in `sidebar/index.html`
+   *
+   * With this in mind, you can create your templates based on what you really need to output.
+   */
+  .sidebar {
+  }
+
+  /**
+   * @theend
+   * That's all you need to know! Easy right?
+   * Everything else will be in your templates, check the `example` folder.
+   */
+  footer { }
+
+Writing templates
+-----------------
+
+*TODO*
+
+Available Jinja filters
+-----------------------
+
+*TODO*

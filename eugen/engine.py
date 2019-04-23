@@ -26,7 +26,7 @@ class Engine:
       extensions=[Spenx],
     )
 
-    self._env.filters['html'] = self._html
+    self._env.filters['spenx'] = self._spenx
     self._env.filters['join'] = self._join
     self._env.filters['markdown'] = self._markdown
     self._env.filters['url'] = self._url
@@ -99,5 +99,5 @@ class Engine:
 
     return self._url(None, dest)
 
-  def _html(self, source):
+  def _spenx(self, source):
     return self._env.extensions['spenx.ext.jinja.Spenx']._parser.parse(self._join(source, '\n'))
