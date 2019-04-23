@@ -28,7 +28,7 @@ setup(
   install_requires=[
     'click~=7.0',
     'Arpeggio~=1.9.0',
-    'spenx~=1.0.1',
+    'spenx~=1.0.2',
     'Jinja2~=2.10.1',
     'markdown~=3.0.1',
     'unicode-slugify~=0.1.3',

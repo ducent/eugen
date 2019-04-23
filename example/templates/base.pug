@@ -12,10 +12,10 @@ html
       a(href=`{{ 'index.html' | url }}`) Home
       {% for block in site.groups.block %}
       li
-        {% if current_url == block.url %}
-        a.active(href='{{ block.url | url }}') {{ block.declarations[0] }}
+        {% if current_url == block.url('block') %}
+        a.active(href='{{ block.url("block") | url }}') {{ block.declarations[0] }}
         {% else %}
-        a(href='{{ block.url | url }}') {{ block.declarations[0] }}
+        a(href='{{ block.url("block") | url }}') {{ block.declarations[0] }}
         {% endif %}
       {% endfor %}
     .content

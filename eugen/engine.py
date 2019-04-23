@@ -58,7 +58,7 @@ class Engine:
         self._logger.info('Rendering {} page(s) for group {}'.format(len(pages), group))
 
         for page in pages:
-          page_url = page['url']
+          page_url = page['url'](group) # Make an url for the current type of page
           page_dest = path.join(self.build_directory, page_url)
 
           self._logger.info('\tProcessing {}'.format(page_url))
@@ -91,8 +91,8 @@ class Engine:
     return path.relpath(value, path.dirname(self._current_url))
 
   def _asset(self, value):
-    src = path.join(self.templates_directory, value)
-    dest = path.join(self.build_directory, value)
+    src = path.abspath(path.join(self.templates_directory, value))
+    dest = path.abspath(path.join(self.build_directory, value))
     
     if copy(src, dest):
       self._logger.info('\tCopied asset file {} to {}'.format(src, dest))

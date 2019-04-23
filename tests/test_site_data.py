@@ -1,4 +1,5 @@
 from sure import expect
+from os import path
 from eugen.site import Site
 
 class TestSiteData:
@@ -45,11 +46,14 @@ class TestSiteData:
     expect(site.groups).to.have.key('element')
 
     expect(site.groups['block']).to.have.length_of(2)
-    expect(site.groups['block'][0]['url']).to.equal('a-block/index.html')
-    expect(site.groups['block'][1]['url']).to.equal('another-block/index.html')
+    expect(site.groups['block'][0]['url']()).to.equal(path.join('a-block', 'index.html'))
+    expect(site.groups['block'][0]['url']('block')).to.equal(path.join('block', 'a-block', 'index.html'))
+    expect(site.groups['block'][1]['url']()).to.equal(path.join('another-block', 'index.html'))
+
 
     expect(site.groups['element']).to.have.length_of(1)
-    expect(site.groups['element'][0]['url']).to.equal('an-element/index.html')
+    expect(site.groups['element'][0]['url']()).to.equal(path.join('an-element', 'index.html'))
+    expect(site.groups['element'][0]['url']('element')).to.equal(path.join('element', 'an-element', 'index.html'))
     
     expect(site.root).to.equal(root_definition)
-    expect(site.root['url']).to.equal('index.html')
+    expect(site.root['url']()).to.equal('index.html')

@@ -1,4 +1,5 @@
 from slugify import slugify
+from os import path
 import logging
 
 ROOT_DECLARATION = ':root'
@@ -38,13 +39,18 @@ class Site:
     """
     return [c for c in elements if any([d.startswith(declaration) for d in c['declarations']]) ]
 
-  def _make_url(self, data):
-    """Makes url for the given data object. For now, it only takes the first declaration
-    and append /index.html to make pretty url or sort of at least.
+  def _make_url_lambda(self, data):
+    """Returns a lambda function used to create an Url for the given element.
+
+    This lamda takes an optional argument which will represents the first part of the
+    Url. It will be the type of the page being rendered actually.
     """
     first_declaration = data['declarations'][0]
-    
-    return '{}/index.html'.format(slugify(first_declaration))
+
+    return lambda group='': path.join(group, slugify(first_declaration), 'index.html')
+
+  def _index_url(self, group=None):
+    return 'index.html'
 
   def compile(self):
     """Post process step. When all css data has been added to this site instance,
@@ -56,7 +62,7 @@ class Site:
 
     # Starts by making all urls and collecting distinct keys
     for d in self.data:
-      d['url'] = self._make_url(d)
+      d['url'] = self._make_url_lambda(d)
 
       keys = keys.union(d.keys())
 
@@ -70,8 +76,7 @@ class Site:
     self.root = next(( d for d in self.data if ROOT_DECLARATION in d['declarations'] ), None)
 
     if self.root:
-      self.root['url'] = 'index.html'
-
+      self.root['url'] = self._index_url
       self.groups['index'] = [self.root]
 
     self._logger.info('Compiled site data into {} group(s): {}'.format(len(self.groups), ', '.join(self.groups.keys())))
