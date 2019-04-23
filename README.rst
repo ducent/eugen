@@ -15,9 +15,7 @@ eugen |travis| |cover| |pypi| |license|
 
 I'm a big fan of living documentation and design systems. When building design systems using CSS, documentation can be a bit tedious and that's why I build this tiny project.
 
-Write your CSS files, add some comments with a tiny specific syntax and provide some templates to generate the final documentation. Edit your styles and regenerate, your documentation will always be in sync with your actual code. Check the `example/` folder to get a grasp on how it works.
-
-To keep things simple, you can use template written with a more compact syntax than HTML `inspired by pugjs <https://github.com/ducent/spenx>`_.
+**Write** your CSS files, add some **comments** with a tiny specific syntax and provide some **templates** to generate the final documentation. Edit your styles and regenerate, your documentation will always be in sync with your actual code. Check the `example/` folder to get a grasp on how it works.
 
 Installation
 ------------
@@ -36,7 +34,7 @@ Usage
 Syntax
 ------
 
-The syntax is really simple:
+In order to generate the final documentation, you'll have to add some tags in your CSS comments based on what you'd expect:
 
 .. code-block:: css
 
@@ -85,9 +83,45 @@ The syntax is really simple:
 Writing templates
 -----------------
 
-*TODO*
+Writing templates is just as easy as the syntax itself and use `Jinja2 <http://jinja.pocoo.org/docs/2.10/templates/>`_ as its template engine. Creates a directory containing your template files (in html or `pugjs like syntax <https://github.com/ducent/spenx>`_) and eugen will use them to render your site. But how does it know which one to choose?
+
+Here's an example. Suppose you have written something like this:
+
+.. code-block:: css
+
+  /**
+   * @name: My topnotch design system!
+   * @version: 1.0.0
+   */
+  :root { }
+
+eugen will parse it and try to load the template for each tag that appears in the declaration, here **name** and **version**. So if you have defined a template called `name.html`, it will be rendered with those page data. Easy right? (by the way, the `:root` element being your index page, it will also try to call the `index.html` template file).
+
+When generating your site, eugen will also copy the CSS files from which it has been generated to the root of the output directory. They will be made available in your templates using the `source_css` property.
+
+Available variables
+^^^^^^^^^^^^^^^^^^^
+
+Inside a template, here is the list of available data you have access to:
+
+- `page`: Current element being rendered (See page data below)
+- `site`: Generated `site object <https://github.com/ducent/eugen/blob/master/eugen/site.py>`_
+- `current_url`: Current url being generated
+- `source_css`: A list of string containing the final path of CSS files from which the documentation is being generated
 
 Available Jinja filters
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
+
+To make your life easier, here is the list of available Jinja fiters you can use in your template:
+
+- `spenx(source)`: Convert a string to HTML using the spenx library
+- `join(lines, separator='')`: Join an array of strings using the given separator
+- `markdown(source)`: Convert a string or an array of string to HTML using the markdown library
+- `url(path)`: Makes a relative url from a string, you should always use it in your templates
+- `asset(path)`: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used
+
+
+Page data
+---------
 
 *TODO*
