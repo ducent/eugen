@@ -1,9 +1,10 @@
+from slugify import slugify
 import logging
 
 ROOT_DECLARATION = ':root'
 
 class Site:
-  """Represents the current site data ready to be rendered.
+  """Represents the current collected site data ready to be rendered.
   """
 
   def __init__(self):
@@ -37,13 +38,27 @@ class Site:
     """
     return [c for c in elements if any([d.startswith(declaration) for d in c['declarations']]) ]
 
+  def _make_url(self, data):
+    """Makes url for the given data object. For now, it only takes the first declaration
+    and append /index.html to make pretty url or sort of at least.
+    """
+    first_declaration = data['declarations'][0]
+    
+    return '{}/index.html'.format(slugify(first_declaration))
+
   def compile(self):
     """Post process step. When all css data has been added to this site instance,
     compile it to create groups that will be processed by the engine by extracting
     all keys and regrouping elements.
     """
 
-    keys = set().union(*(d.keys() for d in self.data))
+    keys = set()
+
+    # Starts by making all urls and collecting distinct keys
+    for d in self.data:
+      d['url'] = self._make_url(d)
+
+      keys = keys.union(d.keys())
 
     # Removes unneeded groups
     keys.discard('_')

@@ -1,8 +1,4 @@
 from arpeggio.peg import PTNodeVisitor
-from slugify import slugify
-
-def make_route(name):
-  return '{}/index.html'.format(slugify(name))
 
 class Visitor(PTNodeVisitor):
   def __init__(self):
@@ -50,7 +46,6 @@ class Visitor(PTNodeVisitor):
   def visit_definition(self, node, children):
     definition = {
       'declarations': children.declaration,
-      'url': make_route(children.declaration[0]),
       'properties': children.property,
     }
 
