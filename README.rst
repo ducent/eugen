@@ -66,7 +66,7 @@ In order to generate the final documentation, you'll have to add some tags in yo
    * and a template matching that tag will be rendered for this element.
    *
    * For example, with this declaration, it will try to find a template matching the
-   * `block` name, and render it in `sidebar/index.html`
+   * `block` name, and render it in `block/sidebar/index.html`
    *
    * With this in mind, you can create your templates based on what you really need to output.
    */
