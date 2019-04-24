@@ -137,8 +137,8 @@ Page data are what's been parsed by eugen. Every tag is represented as a list of
     'declarations': ['.text', 'p', '.and-every-other-declaration],
     'properties': [
       {
-        '_': ['Structure is the same as for the page data', 'except the name property'],
-        'name': 'name-of-the-variable',
+        '_': ['Structure is the same as for the page data', 'except the name property.', 'properties here refers to CSS Custom Properties'],
+        'name': 'name-of-the-property',
       },
     ],
     'block': ['Contains all lines for the @block tag', 'here is another example with a @version tag'],
