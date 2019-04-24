@@ -32,6 +32,7 @@ class Engine:
     self._env.filters['markdown'] = self._markdown
     self._env.filters['url'] = self._url
     self._env.filters['asset'] = self._asset
+    self._env.filters['first'] = self._first
   
   def render(self, site):
     """Render the site data to the final output.
@@ -80,6 +81,9 @@ class Engine:
       return value
 
     return separator.join(value)
+
+  def _first(self, value, default=''):
+    return value[0] if value else default
 
   def _markdown(self, source):  
     return markdown(self._join(source, '\n'))

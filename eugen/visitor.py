@@ -6,6 +6,9 @@ class Visitor(PTNodeVisitor):
 
   def visit_entity(self, node, children):
     return ('entity', node[1].value)
+
+  def visit_empty_comment(self, node, chidren):
+    return [('text', '')] # Keep empty lines in comments
   
   def visit_text(self, node, children):
     return ('text', node.value)

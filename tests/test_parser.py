@@ -24,7 +24,7 @@ class TestParser:
     expect(data).to.have.length_of(1)
     
     d = data[0]
-    expect(d['block']).to.equal(['This is the block current description.', 'It may spans multiple lines!'])
+    expect(d['block']).to.equal(['This is the block current description.', 'It may spans multiple lines!', ''])
     expect(d['category']).to.equal(['useless'])
 
     expect(d['declarations']).to.have.length_of(2)
@@ -60,7 +60,7 @@ class TestParser:
 
     p = d['properties'][0]
     expect(p['name']).to.equal('font-size')
-    expect(p['_']).to.equal(['Comments can be here too!'])
+    expect(p['_']).to.equal(['Comments can be here too!', ''])
     expect(p['prop']).to.equal(['And have properties too!'])
 
     p = d['properties'][1]

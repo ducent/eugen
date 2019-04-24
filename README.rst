@@ -116,6 +116,7 @@ To make your life easier, here is the list of available Jinja fiters you can use
 
 - **spenx(source)**: Convert a string to HTML using the spenx library
 - **join(lines, separator='')**: Join an array of strings using the given separator
+- **first(value, default='')**: Returns the first element of an iterable or the default value
 - **markdown(source)**: Convert a string or an array of string to HTML using the markdown library
 - **url(path)**: Makes a relative url from a string, you should always use it in your templates
 - **asset(path)**: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used
