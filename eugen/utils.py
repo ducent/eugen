@@ -2,7 +2,7 @@ from shutil import copy as shcopy, SameFileError
 from os import makedirs, path
 from glob import glob
 
-def copy(src, dest):
+def copy(src, dest): # pragma: nocover
   """Copy source to destination and creates folders as needed.
 
   Args:

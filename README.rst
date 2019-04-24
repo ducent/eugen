@@ -104,24 +104,42 @@ Available variables
 
 Inside a template, here is the list of available data you have access to:
 
-- `page`: Current element being rendered (See page data below)
-- `site`: Generated `site object <https://github.com/ducent/eugen/blob/master/eugen/site.py>`_
-- `current_url`: Current url being generated
-- `source_css`: A list of string containing the final path of CSS files from which the documentation is being generated
+- **page**: Current element being rendered (See page-data_ below)
+- **site**: Generated `site object <https://github.com/ducent/eugen/blob/master/eugen/site.py>`_
+- **current_url**: Current url being generated
+- **source_css**: A list of string containing the final path of CSS files from which the documentation is being generated
 
 Available Jinja filters
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 To make your life easier, here is the list of available Jinja fiters you can use in your template:
 
-- `spenx(source)`: Convert a string to HTML using the spenx library
-- `join(lines, separator='')`: Join an array of strings using the given separator
-- `markdown(source)`: Convert a string or an array of string to HTML using the markdown library
-- `url(path)`: Makes a relative url from a string, you should always use it in your templates
-- `asset(path)`: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used
+- **spenx(source)**: Convert a string to HTML using the spenx library
+- **join(lines, separator='')**: Join an array of strings using the given separator
+- **markdown(source)**: Convert a string or an array of string to HTML using the markdown library
+- **url(path)**: Makes a relative url from a string, you should always use it in your templates
+- **asset(path)**: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used
 
 
 Page data
 ---------
 
-*TODO*
+.. _page-data:
+
+Page data are what's been parsed by eugen. Every tag is represented as a list of strings, one element corresponding to one parsed line.
+
+.. code-block:: python
+
+  page = {
+    '_': ['Contains every comments not tied to any eugen tag', 'and may span multiple lines'],
+    'url': lambda group='': 'lambda which returns the url relative to a group',
+    'declarations': ['.text', 'p', '.and-every-other-declaration],
+    'properties': [
+      {
+        '_': ['Structure is the same as for the page data', 'except the name property],
+        'name': 'name-of-the-variable',
+      },
+    ],
+    'block': ['Contains all lines for the @block tag', 'here is another example with a @version tag'],
+    'version': ['1.0.0'],
+  }

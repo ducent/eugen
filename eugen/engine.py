@@ -22,10 +22,11 @@ class Engine:
     self._current_url = None
 
     self._env = Environment(
-      loader=FileSystemLoader(templates_directory),
+      loader=FileSystemLoader(self.templates_directory),
       extensions=[Spenx],
     )
 
+    # Register jinja filters
     self._env.filters['spenx'] = self._spenx
     self._env.filters['join'] = self._join
     self._env.filters['markdown'] = self._markdown
@@ -39,7 +40,6 @@ class Engine:
       site (Site): Site data used to generate the output
     """
     rmtree(self.build_directory, ignore_errors=True)
-    makedirs(self.build_directory, exist_ok=True)
 
     # Copy source css files to the build directory
     source_css = []
@@ -47,7 +47,8 @@ class Engine:
     for src_css in site.generated_from:
       css_name = path.basename(src_css)
       css_dest = path.join(self.build_directory, css_name)
-      copy(src_css, css_dest)
+      if copy(src_css, css_dest):
+        self._logger.info('Copied {} to {}'.format(css_name, css_dest))
       source_css.append(css_dest)
     
     # And process each groups
@@ -65,7 +66,7 @@ class Engine:
 
           makedirs(path.dirname(page_dest), exist_ok=True)
 
-          self._current_url = path.join(self.build_directory, page_url)
+          self._current_url = page_dest
 
           html = tpl.render(page=page, current_url=page_url, site=site, source_css=source_css)
 

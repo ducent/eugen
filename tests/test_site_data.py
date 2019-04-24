@@ -42,6 +42,12 @@ class TestSiteData:
 
     site.compile()
 
+    expect(site.groups).to.have.length_of(7)
+    expect(site.groups).to.have.key('name')
+    expect(site.groups).to.have.key('version')
+    expect(site.groups).to.have.key('properties')
+    expect(site.groups).to.have.key('declarations')
+    expect(site.groups).to.have.key('index')
     expect(site.groups).to.have.key('block')
     expect(site.groups).to.have.key('element')
 
