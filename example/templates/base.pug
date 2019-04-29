@@ -5,16 +5,36 @@ html
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
-    {% for css in source_css %}
+    {% for css in from_css_path %}
     link(rel='stylesheet', type='text/css', href='{{ css | url }}') 
     {% endfor %}
+    script(async=True, defer=True, src='https://buttons.github.io/buttons.js')  
   body
-    {% if current_url == site.root.url() %}
     .cover
       .content
-        p.cover__title {{ site.root.name | first }}
+        a.cover__title(href='{{ site.root.url() | url }}') {{ site.root.name | first }}
         h1.cover__subtitle {{ site.root.description | first }}
-    {% endif %}
+        .cover__github
+          a.github-button(
+            href='https://github.com/ducent/eugen/subscription',
+            data-icon='octicon-eye',
+            data-size='large',
+            data-show-count='true',
+            aria-label='Watch ducent/eugen on GitHub') Watch
+          a.github-button(
+            href='https://github.com/ducent/eugen', 
+            data-icon='octicon-star', 
+            data-size='large', 
+            data-show-count='true',
+            aria-label='Star ducent/eugen on GitHub') Star
+    .cover-tabs
+      .content
+        p.cover-tabs__title Examples: 
+        ul.cover-tabs__nav
+          {% for block in site.groups.block %}
+          li
+            a.cover-tabs__nav-item(href=`{{ block.url('block') | url }}`) {{ block.declarations | first }}
+          {% endfor %}
     .content
       {% block content %}
       {% endblock %}

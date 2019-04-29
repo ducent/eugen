@@ -31,6 +31,7 @@ setup(
     'spenx~=1.0.2',
     'Jinja2~=2.10.1',
     'markdown~=3.0.1',
+    'beautifulsoup4~=4.6.3',
     'unicode-slugify~=0.1.3',
   ],
   extras_require={

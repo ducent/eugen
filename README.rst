@@ -107,7 +107,7 @@ Inside a template, here is the list of available data you have access to:
 - **page**: Current element being rendered (See page-data_ below)
 - **site**: Generated `site object <https://github.com/ducent/eugen/blob/master/eugen/site.py>`_
 - **current_url**: Current url being generated
-- **source_css**: A list of string containing the final path of CSS files from which the documentation is being generated
+- **from_css_path**: A list of string containing the final path of CSS files from which the documentation is being generated
 
 Available Jinja filters
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -118,6 +118,7 @@ To make your life easier, here is the list of available Jinja fiters you can use
 - **join(lines, separator='')**: Join an array of strings using the given separator
 - **first(value, default='')**: Returns the first element of an iterable or the default value
 - **markdown(source)**: Convert a string or an array of string to HTML using the markdown library
+- **prettify(value, formatter='html.parser')**: Prettify some HTML using BeautifulSoup
 - **url(path)**: Makes a relative url from a string, you should always use it in your templates
 - **asset(path)**: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used
 

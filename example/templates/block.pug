@@ -6,7 +6,7 @@ h2 Description
 
 {% if page.preview %}
 pre
-  {{ page.preview | spenx | e }}
+  {{ page.preview | spenx | prettify | e }}
 {% endif %}
 
 h2 Elements

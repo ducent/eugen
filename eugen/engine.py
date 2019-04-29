@@ -4,6 +4,7 @@ from spenx.ext.jinja import Spenx
 from eugen.utils import copy, get_folder_mapping
 from os import path, makedirs
 from shutil import rmtree
+from bs4 import BeautifulSoup
 import logging
 
 class Engine:
@@ -33,6 +34,7 @@ class Engine:
     self._env.filters['url'] = self._url
     self._env.filters['asset'] = self._asset
     self._env.filters['first'] = self._first
+    self._env.filters['prettify'] = self._prettify
   
   def render(self, site):
     """Render the site data to the final output.
@@ -69,7 +71,7 @@ class Engine:
 
           self._current_url = page_dest
 
-          html = tpl.render(page=page, current_url=page_url, site=site, source_css=source_css)
+          html = tpl.render(page=page, current_url=page_url, site=site, from_css_path=source_css)
 
           with open(page_dest, 'w') as f:
             f.write(html)
@@ -81,6 +83,9 @@ class Engine:
       return value
 
     return separator.join(value)
+
+  def _prettify(self, value, formatter='html.parser'):
+    return BeautifulSoup(self._join(value), formatter).prettify()
 
   def _first(self, value, default=''):
     return value[0] if value else default
