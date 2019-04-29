@@ -40,7 +40,7 @@ class Engine:
     """Render the site data to the final output.
 
     Args:
-      site (Site): Site data used to generate the output
+      site (Site): Compiled site data used to generate the output
     """
     rmtree(self.build_directory, ignore_errors=True)
 
@@ -79,18 +79,81 @@ class Engine:
         pass
 
   def _join(self, value, separator=''):
+    """Join an array of strings using the given separator.
+
+    Args:
+      value (str or list of str): Values to join
+      separator (str): Separator used to join
+
+    Returns:
+      str: Joined string
+
+    Examples:
+      >>> engine = Engine('_build', 'templates')
+      >>> engine._join('a string')
+      'a string'
+      >>> engine._join(['multiple', 'strings'], ' ')
+      'multiple strings'
+      >>> engine._join(['multiple', 'values'], ', ')
+      'multiple, values'
+    """
     if not isinstance(value, list):
       return value
 
     return separator.join(value)
 
   def _prettify(self, value, formatter='html.parser'):
+    """Prettify the given value.
+
+    Args:
+      value (str or list of str): Values to prettify
+      formatter (str): Formatter used to prettify the output
+
+    Returns:
+      str: Prettified version of the value
+
+    Examples:
+      >>> engine = Engine('_build', 'templates')
+      >>> engine._prettify('<html><head><title>eugen</title></head><body></body></html>')
+      '<html>\\n <head>\\n  <title>\\n   eugen\\n  </title>\\n </head>\\n <body>\\n </body>\\n</html>'
+    """
     return BeautifulSoup(self._join(value), formatter).prettify()
 
   def _first(self, value, default=''):
+    """Returns the first element of a sequence or the default value.
+
+    Args:
+      value (list): Source sequence
+      default (any): Default value if the sequence is empty
+
+    Returns:
+      any: The result
+
+    Examples:
+      >>> engine = Engine('_build', 'templates')
+      >>> engine._first([], 'default value')
+      'default value'
+      >>> engine._first([5, 4, 3])
+      5
+    """
     return value[0] if value else default
 
-  def _markdown(self, source):  
+  def _markdown(self, source):
+    """Convert markdown to html.
+
+    Args:
+      source (str or list of str): Source to convert
+
+    Returns:
+      str: Html result
+
+    Examples:
+      >>> engine = Engine('_build', 'templates')
+      >>> engine._markdown('**this one is strong**')
+      '<p><strong>this one is strong</strong></p>'
+      >>> engine._markdown(['One line', '', 'And another'])
+      '<p>One line</p>\\n<p>And another</p>'
+    """
     return markdown(self._join(source, '\n'))
   
   @contextfilter
@@ -110,4 +173,19 @@ class Engine:
     return self._url(None, dest)
 
   def _spenx(self, source):
+    """Convert the spenx source to html.
+
+    Args:
+      source (str or list of str): Source to convert
+    
+    Returns:
+      str: Converted html
+
+    Example:
+      >>> engine = Engine('_build', 'templates')
+      >>> engine._spenx(['p', '  strong A line'])
+      '<p><strong>A line</strong></p>'
+      >>> engine._spenx('p.content Some content in here')
+      '<p class="content">Some content in here</p>'
+    """
     return self._env.extensions['spenx.ext.jinja.Spenx']._parser.parse(self._join(source, '\n'))
