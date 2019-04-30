@@ -33,6 +33,7 @@ setup(
     'markdown~=3.0.1',
     'beautifulsoup4~=4.6.3',
     'unicode-slugify~=0.1.3',
+    'Pygments~=2.3.1',
   ],
   extras_require={
     'test': [

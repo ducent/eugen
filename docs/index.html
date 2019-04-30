@@ -1,8 +1,8 @@
-<!DOCTYPE html><html><head><title>eugen v1.0.0</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<!DOCTYPE html><html><head><title>eugen v1.0.0</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" /><link rel="stylesheet" type="text/css" href="static\pygments.css" /><link rel="stylesheet" type="text/css" href="static\preview.css" />
 
 <link rel="stylesheet" type="text/css" href="eugen.css" />
 
-<script async defer src="https://buttons.github.io/buttons.js"> </script></head><body><div class="cover"><div class="content"><a href="index.html" class="cover__title">eugen</a><h1 class="cover__subtitle">A minimalist living documentation tool for <strong>Design Systems</strong></h1><div class="cover__github"><a href="https://github.com/ducent/eugen/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch ducent/eugen on GitHub" class="github-button">Watch</a><a href="https://github.com/ducent/eugen" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ducent/eugen on GitHub" class="github-button">Star</a></div></div></div><div class="cover-tabs"><div class="content"><p class="cover-tabs__title">Examples: </p><ul class="cover-tabs__nav">
+<script async defer src="https://buttons.github.io/buttons.js"> </script></head><body><div class="cover"><div class="content"><a href="index.html" class="cover__title">eugen</a><h1 class="cover__subtitle">A minimalist living documentation tool for <strong>Design Systems</strong></h1><div class="cover__socials"><a href="https://github.com/ducent/eugen/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch ducent/eugen on GitHub" class="github-button">Watch</a><a href="https://github.com/ducent/eugen" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ducent/eugen on GitHub" class="github-button">Star</a></div></div></div><div class="cover-tabs"><div class="content"><p class="cover-tabs__title">Examples: </p><ul class="cover-tabs__nav">
 
 <li><a href="block\cover\index.html" class="cover-tabs__nav-item">.cover</a></li>
 
@@ -15,14 +15,54 @@
 <p>Writing a Design System is a complicated task and documenting it is tedious.
 As a big fan of Living Documentation, I have decided to develop this tiny tool 
 to make the process easier.</p>
-<p>Generating your Design System documentation is dead simple:</p>
-<ul>
-<li>Write your CSS with some comments</li>
-<li>Write some templates in either html or <a href="https://github.com/ducent/spenx">spenx</a></li>
-<li>Launch eugen to process your CSS file(s) using your templates</li>
-<li>Profit!</li>
-</ul>
-<p><em>Fun fact, this site is entirely built using eugen itself!</em></p>
+<p><em>Fun fact, this site is entirely built using eugen itself, <a href="https://github.com/ducent/eugen/blob/master/example/eugen.css">check it</a>!</em></p>
+<h2>How does it work?</h2>
+<p>That's damn simple. Just add comments on top of your declarations with a <code>@tagname</code>, 
+for example in <code>my_styles.css</code>:</p>
+<div class="codehilite"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="p">@</span><span class="k">block</span><span class="o">:</span> <span class="nt">Represents</span> <span class="nt">a</span> <span class="nt">button</span>
+ <span class="o">*</span> <span class="o">/</span>
+<span class="p">.</span><span class="nc">button</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="p">@</span><span class="k">block</span>
+ <span class="o">*</span> <span class="nt">Represents</span> <span class="nt">the</span> <span class="nt">sidebar</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="p">@</span><span class="k">added_in</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">0</span>
+ <span class="o">*</span> <span class="o">/</span>
+<span class="p">.</span><span class="nc">sidebar</span> <span class="p">{</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>Create a template file for the <code>@block</code> tag called <code>templates/block.html</code> with the content:</p>
+<div class="codehilite"><pre><span></span><span class="c">&lt;!-- </span>
+<span class="c">    Here you must use valid html but for this sample,</span>
+<span class="c">    no html, no head just body.</span>
+
+<span class="c">    Here, the title will be the element CSS declarations</span>
+<span class="c">    joined by a colon.</span>
+<span class="c">--&gt;</span>
+<span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>{{ page.declarations | join(&#39;, &#39;) }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="c">&lt;!--</span>
+<span class="c">    Next, the content of the `@block` tag will be rendered</span>
+<span class="c">    using the markdown builtin filter.</span>
+<span class="c">--&gt;</span>
+{{ page.block | markdown }}
+<span class="c">&lt;!--</span>
+<span class="c">    page properties are extracted from existing tags</span>
+<span class="c">    and are represented as a list of lines hence the </span>
+<span class="c">    `first` filter here to retrieve the value `1.2.0`</span>
+<span class="c">    for the sidebar example.</span>
+<span class="c">--&gt;</span>
+{% if page.added_in %}
+<span class="p">&lt;</span><span class="nt">small</span><span class="p">&gt;</span>Component added in version {{ page.added_in | first }}<span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;</span>
+{% endif %}
+</pre></div>
+
+
+<p>And finally, launch the <strong>eugen</strong> CLI:</p>
+<div class="codehilite"><pre><span></span><span class="gp">$</span> eugen my_styles.css -t templates -o _build
+</pre></div>
 
 
 </div></body></html>

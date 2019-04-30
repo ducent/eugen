@@ -1,4 +1,7 @@
 from markdown import markdown
+from pygments import highlight
+from pygments.lexers import guess_lexer, get_lexer_by_name
+from pygments.formatters.html import HtmlFormatter
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound, contextfilter
 from spenx.ext.jinja import Spenx
 from eugen.utils import copy, get_folder_mapping
@@ -6,6 +9,8 @@ from os import path, makedirs
 from shutil import rmtree
 from bs4 import BeautifulSoup
 import logging
+
+MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite']
 
 class Engine:
   """Represents the engine responsible of the final template rendering.
@@ -22,6 +27,8 @@ class Engine:
     self._mapping = get_folder_mapping(self.templates_directory)
     self._current_url = None
 
+    self._pygments_formatter = HtmlFormatter(cssclass='codehilite')
+
     self._env = Environment(
       loader=FileSystemLoader(self.templates_directory),
       extensions=[Spenx],
@@ -35,6 +42,7 @@ class Engine:
     self._env.filters['asset'] = self._asset
     self._env.filters['first'] = self._first
     self._env.filters['prettify'] = self._prettify
+    self._env.filters['highlight'] = self._pygments
   
   def render(self, site):
     """Render the site data to the final output.
@@ -154,8 +162,11 @@ class Engine:
       >>> engine._markdown(['One line', '', 'And another'])
       '<p>One line</p>\\n<p>And another</p>'
     """
-    return markdown(self._join(source, '\n'))
+    return markdown(self._join(source, '\n'), extensions=MARKDOWN_EXTENSIONS)
   
+  def _pygments(self, code, lexername=None):
+    return highlight(code, get_lexer_by_name(lexername) if lexername else guess_lexer(code), self._pygments_formatter)
+
   @contextfilter
   def _url(self, context, value):
     if not path.isabs(value):
@@ -163,7 +174,8 @@ class Engine:
 
     return path.relpath(value, path.dirname(self._current_url))
 
-  def _asset(self, value):
+  @contextfilter
+  def _asset(self, context, value):
     src = path.abspath(path.join(self.templates_directory, value))
     dest = path.abspath(path.join(self.build_directory, value))
     

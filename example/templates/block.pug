@@ -1,17 +1,21 @@
 {% extends "base.pug" %}
 {% block content %}
-h1 {{ page.declarations | join(', ') }}
-h2 Description
+h2
+  code {{ page.declarations | join(', ') }}
+
 {{ page.block | markdown }}
 
 {% if page.preview %}
-pre
-  {{ page.preview | spenx | prettify | e }}
+h3 Component preview
+.preview
+  .preview__result {{ page.preview | spenx }}
+  .preview__source {{ page.preview | spenx | prettify | highlight('html') }}
 {% endif %}
 
-h2 Elements
-{% for ele in site.declaration_startswith(page.declarations[0], site.groups.element) %}
-h3 {{ ele.declarations[0] }}
+h3 Elements
+{% for ele in site.declaration_startswith(page.declarations[0] + '__', site.groups.element) %}
+h4
+  code {{ ele.declarations[0] }}
 
 {{ ele.element | markdown }}
 

@@ -5,14 +5,60 @@
  * As a big fan of Living Documentation, I have decided to develop this tiny tool 
  * to make the process easier.
  *
- * Generating your Design System documentation is dead simple:
+ * *Fun fact, this site is entirely built using eugen itself, [check it](https://github.com/ducent/eugen/blob/master/example/eugen.css)!*
  *
- * - Write your CSS with some comments
- * - Write some templates in either html or [spenx](https://github.com/ducent/spenx)
- * - Launch eugen to process your CSS file(s) using your templates
- * - Profit!
+ * ## How does it work?
  *
- * *Fun fact, this site is entirely built using eugen itself!*
+ * That's damn simple. Just add comments on top of your declarations with a `@tagname`, 
+ * for example in `my_styles.css`:
+ *
+ * ```css
+ * /**
+ *  * @block: Represents a button
+ *  * /
+ * .button { }
+ *
+ * /**
+ *  * @block
+ *  * Represents the sidebar
+ *  *
+ *  * @added_in: 1.2.0
+ *  * /
+ * .sidebar { }
+ * ```
+ *
+ * Create a template file for the `@block` tag called `templates/block.html` with the content:
+ *
+ * ```html
+ * <!-- 
+ *     Here you must use valid html but for this sample,
+ *     no html, no head just body.
+ *
+ *     Here, the title will be the element CSS declarations
+ *     joined by a colon.
+ * -->
+ * <h1>{{ page.declarations | join(', ') }}</h1>
+ * <!--
+ *     Next, the content of the `@block` tag will be rendered
+ *     using the markdown builtin filter.
+ * -->
+ * {{ page.block | markdown }}
+ * <!--
+ *     page properties are extracted from existing tags
+ *     and are represented as a list of lines hence the 
+ *     `first` filter here to retrieve the value `1.2.0`
+ *     for the sidebar example.
+ * -->
+ * {% if page.added_in %}
+ * <small>Component added in version {{ page.added_in | first }}</small>
+ * {% endif %}
+ * ```
+ *
+ * And finally, launch the **eugen** CLI:
+ *
+ * ```console
+ * $ eugen my_styles.css -t templates -o _build
+ * ```
  *
  * @name: eugen
  * @description: A minimalist living documentation tool for <strong>Design Systems</strong>
@@ -45,12 +91,20 @@ a, a:visited {
   color: var(--brand-color);
 }
 
-p, ul {
+p, ul, pre {
   margin-bottom: var(--baseline);
+}
+
+pre {
+  overflow: auto;
 }
 
 ul {
   margin-left: var(--baseline);
+}
+
+h2, h4 {
+  color: var(--brand-color);
 }
 
 .content {
@@ -67,8 +121,12 @@ ul {
  * @preview
  *
  * .cover
- *   .cover__title Site title
- *   .cover__subtitle Site description
+ *   .content
+ *    .cover__title Site title
+ *    .cover__subtitle Site description
+ *    .cover__socials
+ *      p Social 1
+ *      p Social 2
  */
 .cover {
   background-color: var(--brand-color);
@@ -77,29 +135,56 @@ ul {
   padding-bottom: var(--baseline);
 }
 
+/**
+ * @element: Represents the cover title.
+ */
 .cover__title {
   color: #fff !important;
   font-size: 16px;
   margin-bottom: 0;
 }
 
+/**
+ * @element: Represents the cover subtitle.
+ */
 .cover__subtitle {
   font-size: 24px;
   font-weight: 500;
 }
 
-.cover__github {
+/**
+ * @element
+ * Hold together social links centered in the cover.
+ *
+ * On eugen website, it contains the follow and star github buttons.
+ */
+.cover__socials {
   margin-top: var(--baseline);
   text-align: center;
 }
 
-.cover__github * + * {
+.cover__socials * {
+  display: inline;
+}
+
+.cover__socials * + * {
   margin-left: calc(var(--baseline) / 2);
 }
 
 /**
  * @block
  * Contains some basic tabs.
+ *
+ * @preview
+ *
+ * .cover-tabs
+ *   .content
+ *     p.cover-tabs__title The title
+ *     ul.cover-tabs__nav
+ *       li
+ *         a.cover-tabs__nav-item(href='#') An item
+ *       li
+ *         a.cover-tabs__nav-item(href='#') Another item
  */
 .cover-tabs {
   background-color: var(--brand-color--dark);
@@ -108,12 +193,18 @@ ul {
   padding: calc(var(--baseline) / 2) 0;
 }
 
+/**
+ * @element: Tabs content title.
+ */
 .cover-tabs__title {
   float: left;
   font-weight: bold;
   margin: 0;
 }
 
+/**
+ * @element: Tabs navigation list.
+ */
 .cover-tabs__nav {
   list-style-type: none;
   margin: 0;
@@ -124,12 +215,15 @@ ul {
   margin-left: calc(var(--baseline) / 2);
 }
 
-a.cover-tabs__nav-item,
-a.cover-tabs__nav-item:visited {
+/**
+ * @element: Tabs title.
+ */
+.cover-tabs__nav-item,
+.cover-tabs__nav-item:visited {
   color: rgba(255, 255, 255, 0.87);
 }
 
-a.cover-tabs__nav-item:hover,
-a.cover-tabs__nav-item:focus {
+.cover-tabs__nav-item:hover,
+.cover-tabs__nav-item:focus {
   color: #fff;
 }
