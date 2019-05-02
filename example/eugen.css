@@ -5,7 +5,7 @@
  * As a big fan of Living Documentation, I have decided to develop this tiny tool 
  * to make the process easier.
  *
- * *Fun fact, this site is entirely built using eugen itself, [check it](https://github.com/ducent/eugen/blob/master/example/eugen.css)!*
+ * *Fun fact, this site is entirely built using eugen itself, [check it yourself](https://github.com/ducent/eugen/blob/master/example/eugen.css)!*
  *
  * ## How does it work?
  *
@@ -26,6 +26,9 @@
  *  * /
  * .sidebar { }
  * ```
+ *
+ * Tag names can be anything that makes sense to you and not in the list of reserved
+ * tags: `declarations`, `properties`, `url`.
  *
  * Create a template file for the `@block` tag called `templates/block.html` with the content:
  *
@@ -54,10 +57,67 @@
  * {% endif %}
  * ```
  *
+ * **eugen** will group pages based on their tags and will try to render templates
+ * matching those tags (here `block`). By the way, the `:root` element will be your index page 
+ * so it will be rendered with the `index.html` template file if present.
+ *
  * And finally, launch the **eugen** CLI:
  *
  * ```console
- * $ eugen my_styles.css -t templates -o _build
+ * $ eugen my_styles.css -t templates -o _build -v
+ * ```
+ *
+ * And **voilà**, your documentation is ready!
+ *
+ * ## Writing templates
+ *
+ * Writing templates is just as easy as the syntax itself and use [Jinja2](http://jinja.pocoo.org/docs/2.10/templates/) 
+ * as its template engine.
+ *
+ * Create a directory containing your template files (in html or [pugjs like syntax](https://github.com/ducent/spenx)) 
+ * and eugen will use them to render your site.
+ *
+ * ### Available variables
+ *
+ * Here is the list of available variables inside a template:
+ *
+ * - `page`: Current element being rendered (See *Page data* below)
+ * - `site`: Generated [site object](https://github.com/ducent/eugen/blob/master/eugen/site.py)
+ * - `current_url`: Current url being generated
+ * - `from_css_path`: A list of string containing the final path of CSS files from which the documentation is being generated. Use it to include them in your documentation
+ *
+ * ### Available filters
+ *
+ * In order to make writing template easier, a bunch of filters has been included:
+ *
+ * - `spenx(source)`: Convert a string to HTML using the [spenx library](https://github.com/ducent/spenx)
+ * - `join(lines, separator='')`: Join an array of strings using the given separator
+ * - `first(value, default='')`: Returns the first element of an iterable or the default value
+ * - `markdown(source)`: Convert a string or an array of strings to HTML using the markdown library
+ * - `prettify(value, formatter='html.parser')`: Prettify some HTML using BeautifulSoup
+ * - `highlight(code, lexername=None)`: Highlight some code with the given lexer (ie. language). You can omit it and it will try to guess from the source code but it may cause performance issues
+ * - `url(path)`: Makes a relative url from a string, you should always use it in your templates
+ * - `asset(path)`: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used
+ *
+ * ### Page data
+ *
+ * Page data represents what eugen has parsed from your source CSS files. It's a dictionary 
+ * with the following structure:
+ *
+ * ```python
+ * page = {
+ *  '_': ['Contains every comments not tied to any eugen tag', 'and may span multiple lines'],
+ *  'url': lambda group='': 'lambda which returns the url relative to a group',
+ *  'declarations': ['.text', 'p', '.and-every-other-declaration],
+ *  'properties': [
+ *    {
+ *      '_': ['Structure is the same as for the page data', 'except the name property.', 'properties here refers to CSS Custom Properties'],
+ *      'name': 'name-of-the-property',
+ *    },
+*    ],
+ *  'block': ['Contains all lines for the @block tag', 'here is another example with a @version tag'],
+ *  'version': ['1.0.0'],
+ * }
  * ```
  *
  * @name: eugen
