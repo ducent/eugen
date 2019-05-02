@@ -44,7 +44,21 @@ class Site:
 
     This lamda takes an optional argument which will represents the first part of the
     Url. It will be the type of the page being rendered actually.
+
+    By default, it will retrieve the first declaration it found and slugify it unless
+    an url tag is available on the element.
+
+    Args:
+      data (dict): Element data
+
+    Returns:
+      callable: Lambda to build the url
     """
+    url = data.get('url', None)
+
+    if url:
+      return lambda group='': url[0]
+
     first_declaration = data['declarations'][0]
 
     return lambda group='': path.join(group, slugify(first_declaration), 'index.html')

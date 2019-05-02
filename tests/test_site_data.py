@@ -35,14 +35,21 @@ class TestSiteData:
         'element': ['An element'],
         'properties': [],
       },
+      {
+        '_': [],
+        'declarations': ['.with-manual-url'],
+        'url': ['typography/index.html'],
+        'misc': [],
+        'properties': [],
+      }
     ])
   
     expect(site.generated_from).to.equal(['style.css'])
-    expect(site.data).to.have.length_of(4)
+    expect(site.data).to.have.length_of(5)
 
     site.compile()
 
-    expect(site.groups).to.have.length_of(7)
+    expect(site.groups).to.have.length_of(8)
     expect(site.groups).to.have.key('name')
     expect(site.groups).to.have.key('version')
     expect(site.groups).to.have.key('properties')
@@ -50,6 +57,7 @@ class TestSiteData:
     expect(site.groups).to.have.key('index')
     expect(site.groups).to.have.key('block')
     expect(site.groups).to.have.key('element')
+    expect(site.groups).to.have.key('misc')
 
     expect(site.groups['block']).to.have.length_of(2)
     expect(site.groups['block'][0]['url']()).to.equal(path.join('a-block', 'index.html'))
@@ -61,5 +69,42 @@ class TestSiteData:
     expect(site.groups['element'][0]['url']()).to.equal(path.join('an-element', 'index.html'))
     expect(site.groups['element'][0]['url']('element')).to.equal(path.join('element', 'an-element', 'index.html'))
     
+    expect(site.groups['misc']).to.have.length_of(1)
+    expect(site.groups['misc'][0]['url']()).to.equal('typography/index.html')
+    expect(site.groups['misc'][0]['url']('somegroup')).to.equal('typography/index.html')
+
     expect(site.root).to.equal(root_definition)
     expect(site.root['url']()).to.equal('index.html')
+
+  def test_it_should_returns_element_starting_with_given_declaration(self):
+    site = Site()
+
+    site.add_result('style.css', [
+      {
+        'declarations': ['.sidebar'],
+      },
+      {
+        'declarations': ['.sidebar__nav'],
+        'element': ['Sidebar navigation.']
+      },
+      {
+        'declarations': ['.sidebar--fixed'],
+        'modifier': ['Sidebar fixed to the page.'],
+      },
+      {
+        'declarations': ['.sidebar__title'],
+        'element': ['Sidebar title.'],
+      },
+      {
+        'declarations': ['.sidebar-nav__item'],
+        'element': ['Sidebar navigation item.'],
+      },
+    ])
+
+    site.compile()
+
+    r = site.declaration_startswith('.sidebar__', site.groups['element'])
+
+    expect(r).to.have.length_of(2)
+    expect(r[0]['declarations'][0]).to.equal('.sidebar__nav')
+    expect(r[1]['declarations'][0]).to.equal('.sidebar__title')
