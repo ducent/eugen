@@ -3,6 +3,7 @@ from eugen.utils import copy
 from eugen.site import Site
 from eugen.version import __version__
 from eugen.engine import Engine
+from timeit import default_timer as timer
 import logging
 
 DEFAULT_TEMPLATES_DIRECTORY = 'templates'
@@ -18,6 +19,7 @@ class Processor:
     self._engine = Engine(build_directory, templates_directory)
 
   def process(self, *css_files):
+    start = timer()
     self._logger.info("""
 -------------------------------
   Eugen version: {version}
@@ -39,3 +41,7 @@ class Processor:
     site.compile()
 
     self._engine.render(site)
+
+    end = timer()
+
+    self._logger.info('Built site in {} seconds'.format(end - start));
