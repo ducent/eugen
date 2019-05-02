@@ -81,7 +81,7 @@ class Engine:
 
           html = tpl.render(page=page, current_url=page_url, site=site, from_css_path=source_css)
 
-          with open(page_dest, 'w') as f:
+          with open(page_dest, 'w', encoding='utf-8') as f:
             f.write(html)
       except (TemplateNotFound, KeyError):
         pass
