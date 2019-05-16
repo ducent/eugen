@@ -92,6 +92,7 @@ and eugen will use them to render your site.</p>
 <li><code>first(value, default='')</code>: Returns the first element of an iterable or the default value</li>
 <li><code>markdown(source)</code>: Convert a string or an array of strings to HTML using the markdown library</li>
 <li><code>prettify(value, formatter='html.parser')</code>: Prettify some HTML using BeautifulSoup</li>
+<li><code>unslugify(value)</code>: Try to convert a slug to a more friendlier string</li>
 <li><code>highlight(code, lexername=None)</code>: Highlight some code with the given lexer (ie. language). You can omit it and it will try to guess from the source code but it may cause performance issues</li>
 <li><code>url(path)</code>: Makes a relative url from a string, you should always use it in your templates</li>
 <li><code>asset(path)</code>: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used</li>

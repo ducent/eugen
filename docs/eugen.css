@@ -95,6 +95,7 @@
  * - `first(value, default='')`: Returns the first element of an iterable or the default value
  * - `markdown(source)`: Convert a string or an array of strings to HTML using the markdown library
  * - `prettify(value, formatter='html.parser')`: Prettify some HTML using BeautifulSoup
+ * - `unslugify(value)`: Try to convert a slug to a more friendlier string
  * - `highlight(code, lexername=None)`: Highlight some code with the given lexer (ie. language). You can omit it and it will try to guess from the source code but it may cause performance issues
  * - `url(path)`: Makes a relative url from a string, you should always use it in your templates
  * - `asset(path)`: Mark a path as an asset which means it will be copied to the output directory and a relative url will be used

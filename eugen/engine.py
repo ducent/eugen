@@ -8,7 +8,7 @@ from eugen.utils import copy, get_folder_mapping
 from os import path, makedirs
 from shutil import rmtree
 from bs4 import BeautifulSoup
-import logging
+import logging, re
 
 MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite']
 
@@ -42,6 +42,7 @@ class Engine:
     self._env.filters['asset'] = self._asset
     self._env.filters['first'] = self._first
     self._env.filters['prettify'] = self._prettify
+    self._env.filters['unslugify'] = self._unslugify
     self._env.filters['highlight'] = self._pygments
   
   def render(self, site):
@@ -85,6 +86,23 @@ class Engine:
             f.write(html)
       except (TemplateNotFound, KeyError):
         pass
+  
+  def _unslugify(self, value):
+    """Sort of reversing a slugify by making a more pretty string.
+
+    Args:
+      value (str): Value to convert
+
+    Examples:
+      >>> engine = Engine('_build', 'templates')
+      >>> engine._unslugify('.a-string')
+      'A string'
+      >>> engine._unslugify('.block__element')
+      'Block element'
+      >>> engine._unslugify('.block--modifier')
+      'Block modifier'
+    """
+    return re.sub('[-_.]+', ' ', value).strip().capitalize()
 
   def _join(self, value, separator=''):
     """Join an array of strings using the given separator.
