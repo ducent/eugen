@@ -81,7 +81,16 @@ class TestParser:
 /*.unused {
   display: block;
 }*/
+
+/**
+ * Something else here should be parsed.
+ */
+.something {
+
+}
+
 """)
     
-    expect(data).to.have.length_of(1)
+    expect(data).to.have.length_of(2)
     expect(data[0]['_']).to.equal(['Some comment should be parsed.'])
+    expect(data[1]['_']).to.equal(['Something else here should be parsed.'])

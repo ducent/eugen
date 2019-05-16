@@ -9,7 +9,7 @@ root = (definition / emptyline / ignored_comment)+ EOF
 EOL = r'\\n|\\r\\n'
 indent = r'[ \t]*'
 emptyline = indent EOL
-ignored_comment = indent r'\/\*[\S\s]*\*\/'
+ignored_comment = indent r'\/\*[\S\s]*?\*\/'
 text = r'[^\\n\\r]+'
 
 entity = "@" r'[a-z-\d]+'
