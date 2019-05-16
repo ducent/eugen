@@ -65,3 +65,23 @@ class TestParser:
 
     p = d['properties'][1]
     expect(p['name']).to.equal('bg-color')
+  
+  def test_it_should_ignore_raw_comments(self):
+    parser = Parser()
+    data = parser.parse("""
+/**
+ * Some comment should be parsed.
+ */
+:root {
+
+}
+
+/* And some should not */
+
+/*.unused {
+  display: block;
+}*/
+""")
+    
+    expect(data).to.have.length_of(1)
+    expect(data[0]['_']).to.equal(['Some comment should be parsed.'])
