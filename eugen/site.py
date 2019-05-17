@@ -27,16 +27,21 @@ class Site:
 
     self._logger.info('Added {} data from file {}'.format(len(parsed_data), file))
 
-  def declaration_startswith(self, declaration, elements):
+  def declaration_startswith(self, declaration, elements, first_only=False):
     """Returns all elements for which one of their declarations starts with the
     given declaration.
 
     Args:
       declaration (str): Base declaration
+      elements (list): List of elements to search for corresponding declarations
+      first_only (bool): Only check the first declaration
 
     Returns:
       list: List of elements matching the given declaration
     """
+    if first_only:
+      return [c for c in elements if c['declarations'][0].startswith(declaration)]
+      
     return [c for c in elements if any([d.startswith(declaration) for d in c['declarations']]) ]
 
   def _make_url_lambda(self, data):

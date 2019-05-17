@@ -108,3 +108,31 @@ class TestSiteData:
     expect(r).to.have.length_of(2)
     expect(r[0]['declarations'][0]).to.equal('.sidebar__nav')
     expect(r[1]['declarations'][0]).to.equal('.sidebar__title')
+  
+  def test_it_should_returns_element_starting_with_given_declaration_first_only(self):
+    site = Site()
+    site.add_result('style.css', [
+      {
+        'declarations': ['.sidebar'],
+      },
+      {
+        'declarations': ['.sidebar__nav'],
+        'element': ['Sidebar navigation.']
+      },
+      {
+        'declarations': ['.sidebar:first-child', '.sidebar--fixed:first-child'],
+        'modifier': ['Sidebar fixed to the page first child.'],
+      },
+      {
+        'declarations': ['.sidebar__title'],
+        'element': ['Sidebar title.'],
+      },
+      {
+        'declarations': ['.sidebar-nav__item'],
+        'element': ['Sidebar navigation item.'],
+      },
+    ])
+
+    r = site.declaration_startswith('.sidebar--', site.data, first_only=True)
+
+    expect(r).to.have.length_of(0)
