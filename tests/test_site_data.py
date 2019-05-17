@@ -136,3 +136,46 @@ class TestSiteData:
     r = site.declaration_startswith('.sidebar--', site.data, first_only=True)
 
     expect(r).to.have.length_of(0)
+  
+  def test_it_should_group_elements_using_groupby(self):
+    site = Site()
+    site.add_result('style.css', [
+      {
+        'declarations': ['.sidebar'],
+        'category': ['Content'],
+      },
+      {
+        'declarations': ['.sidebar__nav'],
+        'element': ['Sidebar navigation.'],
+        'category': ['Content'],
+      },
+      {
+        'declarations': ['.sidebar:first-child', '.sidebar--fixed:first-child'],
+        'modifier': ['Sidebar fixed to the page first child.'],
+        'category': ['Misc'],
+      },
+      {
+        'declarations': ['.sidebar__title'],
+        'element': ['Sidebar title.'],
+        'category': ['Content'],
+      },
+      {
+        'declarations': ['.sidebar-nav__item'],
+        'element': ['Sidebar navigation item.'],
+      },
+    ])
+
+    site.compile()
+    r = site.groupby('category')
+
+    k, v = next(r)
+    expect(k).to.equal('Content')
+    expect(list(v)).to.have.length_of(3)
+
+    k, v = next(r)
+    expect(k).to.equal('Misc')
+    expect(list(v)).to.have.length_of(1)
+
+    k, v = next(r)
+    expect(k).to.equal('_')
+    expect(list(v)).to.have.length_of(1)

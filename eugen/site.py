@@ -1,6 +1,6 @@
 from slugify import slugify
 from os import path
-import logging
+import logging, itertools
 
 ROOT_DECLARATION = ':root'
 
@@ -26,6 +26,19 @@ class Site:
     self.data.extend(parsed_data)
 
     self._logger.info('Added {} data from file {}'.format(len(parsed_data), file))
+
+  def groupby(self, group):
+    """Regroup site data by the given tag.
+
+    Args:
+      group (str): Regroup tag
+
+    Returns
+      [(str, list)]: List of tuples representing groups and their contents
+    """
+    key_func = lambda k: k.get(group, ['_'])[0]
+
+    return itertools.groupby(sorted(self.data, key=key_func), key=key_func)
 
   def declaration_startswith(self, declaration, elements, first_only=False):
     """Returns all elements for which one of their declarations starts with the
