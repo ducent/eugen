@@ -12,7 +12,7 @@ emptyline = indent EOL
 ignored_comment = indent r'\/\*[\S\s]*?\*\/'
 text = r'[^\\n\\r]+'
 
-entity = "@" r'[a-z-\d]+'
+entity = "@" r'[a-z-_\d]+'
 declaration = r'[^{\/\\n\\r,]+'
 property_name = r'[a-z-\d]+'
 

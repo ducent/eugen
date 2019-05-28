@@ -13,6 +13,7 @@ class TestParser:
  * It may spans multiple lines!
  *
  * @category: useless
+ * @say_something: Hi!
  */
 .a-block,
 .same-block {
@@ -26,6 +27,7 @@ class TestParser:
     d = data[0]
     expect(d['block']).to.equal(['This is the block current description.', 'It may spans multiple lines!', ''])
     expect(d['category']).to.equal(['useless'])
+    expect(d['say_something']).to.equal(['Hi!'])
 
     expect(d['declarations']).to.have.length_of(2)
     expect(d['declarations']).to.equal(['.a-block', '.same-block'])
