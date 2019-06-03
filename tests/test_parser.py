@@ -96,3 +96,18 @@ class TestParser:
     expect(data).to.have.length_of(2)
     expect(data[0]['_']).to.equal(['Some comment should be parsed.'])
     expect(data[1]['_']).to.equal(['Something else here should be parsed.'])
+
+  def test_it_should_allow_import_rules(self):
+    parser = Parser()
+    data = parser.parse("""
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+/**
+ * Some root element!
+ */
+:root {
+
+}
+""")
+    
+    expect(data[0]['_']).to.equal(['Some root element!'])

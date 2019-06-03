@@ -4,11 +4,12 @@ from eugen.visitor import Visitor
 class Parser(ParserPEG):
   def __init__(self):
     super().__init__("""
-root = (definition / emptyline / ignored_comment)+ EOF
+root = (definition / atrule / emptyline / ignored_comment)+ EOF
 
 EOL = r'\\n|\\r\\n'
 indent = r'[ \t]*'
 emptyline = indent EOL
+atrule = "@" text EOL
 ignored_comment = indent r'\/\*[\S\s]*?\*\/'
 text = r'[^\\n\\r]+'
 
